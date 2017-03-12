@@ -1,23 +1,27 @@
 (defproject booklog "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :description "Keep track of the books you read, a sample project to demonstrate Buddy."
+  :url "https://github.com/lambdaisland/booklog"
 
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.293" :scope "provided"]
+  :license {:name "Mozilla Public License 2.0"
+            :url "https://www.mozilla.org/en-US/MPL/2.0/"}
+
+  :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
+                 [org.clojure/clojurescript "1.9.495" :scope "provided"]
                  [com.cognitect/transit-clj "0.8.297"]
-                 [ring "1.5.0"]
-                 [ring/ring-defaults "0.2.1"]
-                 [bk/ring-gzip "0.1.1"]
-                 [ring.middleware.logger "0.5.0"]
-                 [compojure "1.5.1"]
+                 [ring "1.5.1"]
+                 [ring/ring-defaults "0.2.3"]
+                 [bk/ring-gzip "0.2.1"]
+                 [lambdaisland/ring.middleware.logger "0.5.1"]
+                 [compojure "1.5.2"]
                  [environ "1.1.0"]
                  [com.stuartsierra/component "0.3.2"]
                  [org.danielsz/system "0.4.0"]
                  [org.clojure/tools.namespace "0.2.11"]
-                 [reagent "0.6.0"]
-                 [lambdaisland/garden-watcher "0.3.1"]]
+                 [reagent "0.6.1"]
+                 [lambdaisland/garden-watcher "0.3.1"]
+                 [hiccup "2.0.0-alpha1"]
+                 [buddy/buddy-auth "1.4.1"]
+                 [com.fasterxml.jackson.core/jackson-core "2.8.6"]]
 
   :plugins [[lein-cljsbuild "1.1.5"]
             [lein-environ "1.1.0"]]
@@ -100,8 +104,8 @@
   :doo {:build "test"}
 
   :profiles {:dev
-             {:dependencies [[figwheel "0.5.8"]
-                             [figwheel-sidecar "0.5.8"]
+             {:dependencies [[figwheel "0.5.9"]
+                             [figwheel-sidecar "0.5.9"]
                              [com.cemerick/piggieback "0.2.1"]
                              [org.clojure/tools.nrepl "0.2.12"]
                              [lein-doo "0.1.7"]

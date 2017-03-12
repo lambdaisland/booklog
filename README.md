@@ -135,10 +135,9 @@ Now your app is running at
 
 ## License
 
-Copyright © 2016 FIXME
+Copyright © 2017 Arne Brasseur
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Mozilla Public License 2.0 https://www.mozilla.org/en-US/MPL/2.0/
 
 ## Chestnut
 

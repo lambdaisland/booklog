@@ -9,11 +9,11 @@
             [system.components.handler :refer [new-handler]]
             [system.components.middleware :refer [new-middleware]]
             [system.components.jetty :refer [new-web-server]]
-            [booklog.routes :refer [routes]]))
+            [booklog.routes :refer [app-routes]]))
 
 (defn app-system []
   (component/system-map
-   :routes (new-endpoint (fn [_] routes))
+   :routes (new-endpoint app-routes)
    :middleware (new-middleware  {:middleware [[wrap-defaults site-defaults]
                                               wrap-with-logger
                                               wrap-gzip]})
