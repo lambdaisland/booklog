@@ -7,6 +7,7 @@
 
   :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
                  [org.clojure/clojurescript "1.9.495" :scope "provided"]
+                 [com.cognitect/transit-clj "0.8.297" :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [com.cognitect/transit-clj "0.8.297"]
                  [ring "1.5.1"]
                  [ring/ring-defaults "0.2.3"]
@@ -22,7 +23,8 @@
                  [hiccup "2.0.0-alpha1"]
                  [buddy/buddy-auth "1.4.1"]
                  [buddy/buddy-hashers "1.2.0"]
-                 [spicerack "0.1.2"]]
+                 [spicerack "0.1.2"]
+                 [prone "1.1.4"]]
 
   :plugins [[lein-cljsbuild "1.1.5"]
             [lein-environ "1.1.0"]]

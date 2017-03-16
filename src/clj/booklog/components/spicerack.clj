@@ -8,15 +8,16 @@
 (defn remove-shutdown-hook [^Thread thread]
   (.removeShutdownHook (Runtime/getRuntime) thread))
 
-(defrecord SpicerackComponent [path]
+(defrecord SpicerackComponent [path db hook]
   component/Lifecycle
   (start [this]
     (if (:db this)
       this ;; idempotent
-      (let [^org.mapdb.DB db (sr/open-database path :transaction-enable? true)
+      (let [^org.mapdb.DB db (sr/open-database path)
             hook (Thread. (fn [] (.close db)))]
-        (add-shutdown-hook hook) ;; prevent corruption when the JVM is killed
+        ;; prevent corruption when the JVM is killed
         ;; without first stopping the system
+        (add-shutdown-hook hook)
         (assoc this :db db :hook hook))))
 
   (stop [{:keys [^org.mapdb.DB db ^Thread hook] :as this}]
@@ -27,4 +28,4 @@
     (dissoc this :db :hook)))
 
 (defn new-spicerack [path]
-  (->SpicerackComponent path))
+  (map->SpicerackComponent {:path path}))
