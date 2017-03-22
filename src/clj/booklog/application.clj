@@ -2,6 +2,7 @@
   (:gen-class)
   (:require [booklog.components.spicerack :refer [new-spicerack]]
             [booklog.routes :refer [app-routes]]
+            [booklog.middleware.render :refer [wrap-render-views]]
             [buddy.auth.backends :as buddy-backends]
             [buddy.auth.middleware :refer [wrap-authentication]]
             [com.stuartsierra.component :as component]
@@ -20,7 +21,8 @@
    :spicerack (new-spicerack "./booklog.db")
    :routes (-> (new-endpoint app-routes)
                (component/using [:spicerack]))
-   :middleware (new-middleware  {:middleware [[wrap-authentication (buddy-backends/session)]
+   :middleware (new-middleware  {:middleware [wrap-render-views
+                                              [wrap-authentication (buddy-backends/session)]
                                               [wrap-defaults site-defaults]
                                               wrap-with-logger
                                               wrap-gzip
