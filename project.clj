@@ -7,8 +7,7 @@
 
   :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
                  [org.clojure/clojurescript "1.9.495" :scope "provided"]
-                 [com.cognitect/transit-clj "0.8.297" :exclusions [com.fasterxml.jackson.core/jackson-core]]
-                 [com.cognitect/transit-clj "0.8.297"]
+                 [com.cognitect/transit-clj "0.8.300"]
                  [ring "1.5.1"]
                  [ring/ring-defaults "0.2.3"]
                  [bk/ring-gzip "0.2.1"]
