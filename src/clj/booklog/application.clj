@@ -18,7 +18,7 @@
 (defn app-system []
   (component/system-map
    :spicerack (new-spicerack "./booklog.db")
-   :routes (-> (new-endpoint app-routes)
+   :routes (-> (new-endpoint #(fn [req] ((app-routes %) req)))
                (component/using [:spicerack]))
    :middleware (new-middleware  {:middleware [wrap-render-views
                                               [wrap-defaults site-defaults]
