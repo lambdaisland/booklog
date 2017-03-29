@@ -20,10 +20,14 @@
                  [reagent "0.6.1"]
                  [lambdaisland/garden-watcher "0.3.1"]
                  [hiccup "2.0.0-alpha1"]
+                 [spicerack "0.1.2"]
+                 [prone "1.1.4"]
+                 [com.rpl/specter "1.0.0"]
+                 ;;[buddy/buddy-core "1.2.0"]
                  [buddy/buddy-auth "1.4.1"]
                  [buddy/buddy-hashers "1.2.0"]
-                 [spicerack "0.1.2"]
-                 [prone "1.1.4"]]
+                 ;;[buddy/buddy-sign "1.4.0"]
+                 ]
 
   :plugins [[lein-cljsbuild "1.1.5"]
             [lein-environ "1.1.0"]]
@@ -82,7 +86,7 @@
   ;; not be picked up, instead configure figwheel here on the top level.
 
   :figwheel {;; :http-server-root "public"       ;; serve static assets from resources/public/
-             ;; :server-port 3449                ;; default
+             :server-port 1235                ;; default
              ;; :server-ip "127.0.0.1"           ;; default
              :css-dirs ["resources/public/css"]  ;; watch and update CSS
 

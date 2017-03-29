@@ -1,18 +1,13 @@
 (ns booklog.routes
   (:require [booklog.auth.routes :refer [auth-routes]]
-            [booklog.auth.views :refer [home-view]]
-            [compojure.core :refer [GET routes]]
-            [compojure.route :refer [resources]]
-            [ring.util.response :refer [redirect response]]))
+            [booklog.books.routes :refer [books-routes]]
+            [booklog.timeline.routes :refer [timeline-routes]]
+            [compojure.core :refer [routes]]
+            [compojure.route :refer [resources]]))
 
 (defn app-routes [endpoint]
   (routes
-
-   (GET "/" {:keys [identity session]}
-     (if identity
-       #:render {:view home-view
-                 :data {:user/username identity}}
-       (redirect "/login")))
-
+   (timeline-routes endpoint)
+   (books-routes endpoint)
    (auth-routes endpoint)
    (resources "/")))

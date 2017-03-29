@@ -1,6 +1,6 @@
 (ns booklog.auth.views
-  (:require [booklog.views.components :refer [form form-button form-field]]
-            [booklog.views.layout :refer [layout]]))
+  (:require [booklog.components :refer [form form-button form-field]]
+            [booklog.layout :refer [layout]]))
 
 (defn user-form [{:user/keys [username password]
                   :userform/keys [action caption alt-action alt-caption]}]
@@ -22,7 +22,7 @@
                              :caption "Login"
                              :alt-action "/register"
                              :alt-caption "Register"})]
-    (layout vs (user-form vs))))
+    (user-form vs)))
 
 (defn register-view [vs]
   (let [vs (merge vs
@@ -31,8 +31,4 @@
                              :caption "Register"
                              :alt-action "/login"
                              :alt-caption "Login"})]
-    (layout vs (user-form vs))))
-
-
-(defn home-view [vs]
-  (layout vs [:p "Hello, " (:user/username vs)]))
+    (user-form vs)))

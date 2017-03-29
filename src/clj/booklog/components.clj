@@ -1,4 +1,4 @@
-(ns booklog.views.components
+(ns booklog.components
   (:require [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]))
 
 (defn center-box [& cs]

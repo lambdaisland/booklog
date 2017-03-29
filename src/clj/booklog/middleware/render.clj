@@ -1,4 +1,5 @@
-(ns booklog.middleware.render)
+(ns booklog.middleware.render
+  (:require [booklog.layout :refer [layout]]))
 
 (def res-defaults
   {:status 200
@@ -15,9 +16,10 @@
       (deep-merge res-defaults)
       (assoc :body (list body))))
 
-(defn layout-view-data [{:keys [identity] :as req}]
+(defn extra-view-data [{:keys [identity] :as req}]
   (if identity
-    {:layout/authenticated? true}
+    {:user/authenticated? true
+     :user/identity identity}
     {}))
 
 (defn wrap-render-views [handler]
@@ -26,6 +28,8 @@
       (if-let [view (:render/view res)]
         (let [view-data (merge (:flash req)
                                (:render/data res)
-                               (layout-view-data req))]
-          (update-response res (view view-data)))
+                               (extra-view-data req))
+              layout (:render/layout res layout)]
+          (update-response res (->> (view view-data)
+                                    (layout view-data))))
         res))))
