@@ -23,10 +23,11 @@
                  [spicerack "0.1.2"]
                  [prone "1.1.4"]
                  [com.rpl/specter "1.0.0"]
-                 ;;[buddy/buddy-core "1.2.0"]
+
                  [buddy/buddy-auth "1.4.1"]
                  [buddy/buddy-hashers "1.2.0"]
                  ;;[buddy/buddy-sign "1.4.0"]
+                 ;;[buddy/buddy-core "1.2.0"]
                  ]
 
   :plugins [[lein-cljsbuild "1.1.5"]

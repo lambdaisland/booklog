@@ -3,9 +3,6 @@
   (:require [booklog.components.spicerack :refer [new-spicerack]]
             [booklog.middleware.render :refer [wrap-render-views]]
             [booklog.routes :refer [app-routes]]
-            [buddy.auth.accessrules :refer [wrap-access-rules]]
-            [buddy.auth.backends :as buddy-backends]
-            [buddy.auth.middleware :refer [wrap-authentication]]
             [com.stuartsierra.component :as component]
             [environ.core :refer [env]]
             [prone.middleware :as prone]
@@ -18,22 +15,12 @@
             [system.components.jetty :refer [new-web-server]]
             [system.components.middleware :refer [new-middleware]]))
 
-(def auth-rules {:rules [{:pattern #"^/books/new"
-                          :handler :identity
-                          :error/message "Only registered users can add books"}
-                         ]
-                 :on-error (fn [req]
-                             (-> (redirect "/login")
-                                 (assoc :flash {:layout/message (:error/message req)})))})
-
 (defn app-system []
   (component/system-map
    :spicerack (new-spicerack "./booklog.db")
    :routes (-> (new-endpoint app-routes)
                (component/using [:spicerack]))
    :middleware (new-middleware  {:middleware [wrap-render-views
-                                              [wrap-access-rules auth-rules]
-                                              [wrap-authentication (buddy-backends/session)]
                                               [wrap-defaults site-defaults]
                                               wrap-with-logger
                                               wrap-gzip
