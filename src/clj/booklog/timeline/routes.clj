@@ -5,13 +5,13 @@
 
 (defn render-timeline [books]
   #:render {:view timeline-view
-            :data {:timeline/books (vals books)}})
+            :data {:timeline/books books}})
 
 (defn timeline-routes [{:keys [spicerack] :as endpoint}]
   (let [books (sr/open-hashmap (:db spicerack) "books")]
     (routes
      (GET "/" _
-       (render-timeline books))
+       (render-timeline (vals books)))
 
      (GET "/users/:user/books" [user]
-       (render-timeline (filter #(= (:user/identity %) user) books))))))
+       (render-timeline (filter #(= (:user/identity %) user) (vals books)))))))

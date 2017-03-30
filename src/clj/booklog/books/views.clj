@@ -15,8 +15,9 @@
    [:h1 "Add new book"]
    (book-form data)])
 
-(defn book-view [{:book/keys [user created-at title author]}]
+(defn book-view [{:book/keys [created-at title author]
+                  :user/keys [identity]}]
   [:div
    [:h1 "“" [:span title] "”" " by " [:span.i author]]
-   [:div "Read on " created-at " by " user]
+   [:div "Read on " created-at " by " [:a {:href (str "/users/" identity "/books")} identity]]
    ])

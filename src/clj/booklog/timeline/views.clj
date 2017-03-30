@@ -1,10 +1,12 @@
 (ns booklog.timeline.views)
 
-(defn book-view [{:book/keys [id author title user]}]
+(defn book-view [{:book/keys [id author title]
+                  :user/keys [identity]
+                  :as book}]
   [:div
-   user
+   [:a {:href (str "/users/" identity "/books")} identity]
    " read "
-   title
+   [:a {:href (str "/books/" id)} title]
    " by "
    author])
 
