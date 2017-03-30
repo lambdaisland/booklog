@@ -13,7 +13,9 @@
             [system.components.endpoint :refer [new-endpoint]]
             [system.components.handler :refer [new-handler]]
             [system.components.jetty :refer [new-web-server]]
-            [system.components.middleware :refer [new-middleware]]))
+            [system.components.middleware :refer [new-middleware]]
+            [buddy.auth.middleware :refer [wrap-authentication]]
+            [buddy.auth.backends :as backends]))
 
 (defn app-system []
   (component/system-map
@@ -21,6 +23,7 @@
    :routes (-> (new-endpoint #(fn [req] ((app-routes %) req)))
                (component/using [:spicerack]))
    :middleware (new-middleware  {:middleware [wrap-render-views
+                                              [wrap-authentication (backends/session)]
                                               [wrap-defaults site-defaults]
                                               wrap-with-logger
                                               wrap-gzip
