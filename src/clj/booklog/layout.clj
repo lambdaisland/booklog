@@ -1,7 +1,8 @@
 (ns booklog.layout
   (:require [booklog.components :refer [center-box]]
             [hiccup.page :refer [doctype]]
-            [hiccup2.core :refer [html]]))
+            [hiccup2.core :refer [html]]
+            [clojure.string :as str]))
 
 (defn menu-item [href caption]
   [:a.pr4.white.link {:href href} caption])
@@ -29,7 +30,7 @@
      [:meta {:name "viewport", :content "width=device-width, initial-scale=1"}]
      [:link {:href "/css/tachyons.min.css", :rel "stylesheet", :type "text/css"}]
      [:link {:href "/css/style.css", :rel "stylesheet", :type "text/css"}]
-     [:title (str title " | Booklog")]]
+     [:title (str/join " | " (remove nil? [title "Booklog"]))]]
 
     [:body
      [:header#header.w-100.bg-yellow.pv3
