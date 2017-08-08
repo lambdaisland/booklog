@@ -15,3 +15,4 @@ pom.xml
 pom.xml.asc
 resources/public/css/style.css
 *.db
+pemfile_cached
