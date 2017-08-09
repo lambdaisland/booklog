@@ -1,4 +1,7 @@
-(require '[sparkledriver.core :as sd])
+(require '[sparkledriver.core :as sd]
+         '[booklog.test-helper :refer :all]
+         '[spicerack.core :as sr])
+
 (import 'java.util.regex.Pattern)
 
 (user/go)
@@ -50,3 +53,31 @@
 (->
  (sd/find-by-xpath* "//a[text()='Log in'")
  )
+
+(map (fn [[sym _]] `(~'defn ~sym
+                     ([~'arg] (~(symbol (str "sd/" sym)) ~'*browser* ~'arg))
+                     ([~'browser-or-elem ~'arg] (~(symbol (str "sd/" sym)) ~'browser-or-elem ~'arg)))) (filter #(= ((comp ffirst :arglists meta val) %) 'browser-or-elem) (ns-publics (find-ns 'sparkledriver.core))))
+
+
+
+(def sys (com.stuartsierra.component/start (test-system)))
+(component/stop sys)
+
+(def db (-> sys :spicerack :db))
+
+(def users (sr/open-hashmap db "users"))
+users
+(sr/put! users  "foo" "bar")
+
+(sr/open-hashmap db "users")
+
+
+(sr/commit db)
+(sr/rollback db)
+
+(doseq [n (.getAllNames db)
+        :let [hm (sr/open-hashmap db n)]]
+  (run! (partial sr/remove! hm) (keys hm)))
+
+
+spicerack.core/open-hashmap
