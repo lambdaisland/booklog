@@ -1,11 +1,13 @@
-(require '[sparkledriver.core :as sd])
+(ns repl.sparkledriver
+  (:require [sparkledriver.core :as sd]))
 
-#_
-(with-browser [browser (sd/make-browser)]
-  ,,,)
+#_ (with-browser [browser (sd/make-browser)]
+     ,,,)
 
+(user/go)
 (def browser (sd/make-browser))
 ;; (sd/close-browser! browser)
+
 
 (sd/fetch! browser "http://localhost:1234")
 ;;=> #object[com.machinepublishers.jbrowserdriver.JBrowserDriver 0x392d747e "com.machinepublishers.jbrowserdriver.JBrowserDriver@392d747e"]
@@ -19,3 +21,10 @@
 
 (require '[clojure.java.shell :refer [sh]])
 (sh "xdg-open" (sd/screenshot browser))
+
+(sd/click! (sd/find-by-css browser "a.log-in"))
+
+(defn title []
+  (sd/inner-html (sd/find-by-css browser "head title")))
+(sd/current-url browser)
+"http://localhost:1234/login"

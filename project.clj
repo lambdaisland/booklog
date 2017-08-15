@@ -7,7 +7,7 @@
 
   :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
                  [org.clojure/clojurescript "1.9.854" :scope "provided"]
-                 [com.google.guava/guava "20.0"]
+                 [com.google.guava/guava "23.0"]
                  [com.cognitect/transit-clj "0.8.300"]
                  [ring "1.6.2"]
                  [ring/ring-defaults "0.3.1"]
@@ -19,18 +19,18 @@
                  [org.danielsz/system "0.4.0"]
                  [org.clojure/tools.namespace "0.2.11"]
                  [reagent "0.7.0"]
-                 [lambdaisland/garden-watcher "0.3.1"]
+                 [lambdaisland/garden-watcher "0.3.2"]
                  [hiccup "2.0.0-alpha1"]
                  [spicerack "0.1.3"]
                  [prone "1.1.4"]
-                 [com.rpl/specter "1.0.2"]
+                 [com.rpl/specter "1.0.3"]
 
                  [buddy/buddy-auth "1.4.1"]
                  [buddy/buddy-hashers "1.2.0"]
                  ;;[buddy/buddy-sign "1.4.0"]
                  ;;[buddy/buddy-core "1.2.0"]
 
-                 [sparkledriver "0.1.8"]
+                 [sparkledriver "0.1.9"]
                  [lambdaisland/uri "1.1.0"]]
 
   :plugins [[lein-cljsbuild "1.1.7"]

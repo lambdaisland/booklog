@@ -30,3 +30,26 @@
 
 (defn new-spicerack [path & {:as db-opts}]
   (map->SpicerackComponent {:path path :db-opts db-opts}))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Helpers
+
+(defn dump-db
+  "Return all data in the database as one big hash-map."
+  [db]
+  (into {} (map (juxt identity (partial sr/open-hashmap db)) (.getAllNames db))))
+
+(defn load-db!
+  "Populate the database with data, as returned by `load-db!`"
+  [db data]
+  (doseq [[name values] data
+          :let [hmap (sr/open-hashmap db name)]]
+    (doseq [[k v] values]
+      (sr/put! hmap k v))))
+
+(defn clear-db!
+  "Delete all data in the database, making it empty again."
+  [db]
+  (doseq [n (.getAllNames db)
+          :let [hm (sr/open-hashmap db n)]]
+    (run! (partial sr/remove! hm) (keys hm))))

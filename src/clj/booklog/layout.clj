@@ -5,7 +5,7 @@
             [clojure.string :as str]))
 
 (defn menu-item [href caption]
-  [:a.pr4.white.link {:href href} caption])
+  [:a.pr4.white.link {:href href :class (str/replace (str/lower-case caption) #"\s+" "-")} caption])
 
 (defn menu [{:user/keys [authenticated?
                          identity]}]

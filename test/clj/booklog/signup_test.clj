@@ -3,19 +3,17 @@
             [booklog.test-helper :refer :all]
             [sparkledriver.core :as sd :refer [click! send-text!]]))
 
-(use-fixtures :once wrap-test-system)
+(use-fixtures :once (fn [tests] (wrap-browser #(wrap-test-system tests))))
 (use-fixtures :each wrap-clear-db)
 
-(def home-page (str "http://localhost:" test-http-port))
-
 (defn login! [user password]
-  (fetch! (str home-page "/login"))
+  (fetch! (app-url "/login"))
   (send-text! (find-by-css "form #username") user)
   (send-text! (find-by-css "form #password") password)
   (click! (find-by-css "input[type=submit]")))
 
 (deftest sign-up-test
-  (fetch! home-page)
+  (fetch! (app-url "/"))
   (is (= (current-path) "/"))
 
   (click! (find-by-xpath "//a[text()='Log in']"))
@@ -51,4 +49,5 @@
   (is (some-page-text "My books"))
   (is (some-page-text "“The Tangled Web” by Michal Zalewski")))
 
-(run-tests)
+(comment
+  (run-tests))

@@ -1,5 +1,5 @@
 (ns user
-  (:require [booklog.application]
+  (:require [booklog.application :as app]
             [com.stuartsierra.component :as component]
             [figwheel-sidecar.config :as fw-config]
             [figwheel-sidecar.system :as fw-sys]
@@ -16,16 +16,22 @@
 (def reset reloaded/reset)
 (def reset-all reloaded/reset-all)
 
-(defn dev-system []
-  (merge
-   (booklog.application/app-system)
-   (component/system-map
-    :figwheel-system (fw-sys/figwheel-system (fw-config/fetch-config))
-    :css-watcher (fw-sys/css-watcher {:watch-paths ["resources/public/css"]})
-    :garden-watcher (new-garden-watcher ['booklog.styles]))))
+(defn dev-config []
+  (assoc
+   (app/app-config)
+   :css-watch-paths ["resources/public/css"]
+   :garden-watch-nss '[booklog.styles]))
+
+(defn dev-system [config]
+  (assoc
+   (app/app-system config)
+   :figwheel-system (fw-sys/figwheel-system (fw-config/fetch-config))
+   :css-watcher     (fw-sys/css-watcher {:watch-paths (:css-watch-paths config)})
+   :garden-watcher  (new-garden-watcher (:garden-watch-nss config))))
 
 (ctnr/set-refresh-dirs "src" "dev")
-(reloaded/set-init! #(dev-system))
+
+(reloaded/set-init! #(dev-system (dev-config)))
 
 (defn browser-repl []
   (fw-sys/cljs-repl (:figwheel-system reloaded/system)))

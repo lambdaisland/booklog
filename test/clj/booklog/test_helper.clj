@@ -1,12 +1,15 @@
 (ns booklog.test-helper
   (:require [booklog.application :as app]
+            [booklog.util :as util]
+            [booklog.components.spicerack :as sc]
             [com.stuartsierra.component :as component]
             [clojure.java.io :as io]
             [sparkledriver.core :as sd]
             [lambdaisland.uri :as uri]
             [clojure.test :as test]
             [spicerack.core :as sr])
-  (:import java.util.regex.Pattern))
+  (:import java.util.regex.Pattern
+           org.openqa.selenium.NoSuchElementException))
 
 (def ^{:dynamic true
        :doc "The SparkleDriver browser instance. You can access this inside your tests."}
@@ -18,70 +21,82 @@
 
 (def test-http-port 59800)
 
-(defn temp-file-name [name ext]
-  (str (io/file (System/getProperty "java.io.tmpdir")
-                (str name (rand-int 99999) "." ext))))
-
-(defn test-system []
-  (-> (app/app-system)
-      (assoc-in [:http :options :port] test-http-port)
-      (assoc-in [:spicerack :path] (temp-file-name "test" "db"))
-      (assoc-in [:spicerack :db-opts] {:transaction-enable? true})))
+(defn test-config []
+  (assoc
+   (app/app-config)
+   :http-port test-http-port
+   :db-path  (util/temp-file-name "test" "db")))
 
 (defn wrap-test-system [tests]
-  (sd/with-browser [browser (sd/make-browser)]
-    (binding [*browser* browser
-              *system* (component/start (test-system))]
+  (let [config (test-config)]
+    (binding [*system* (-> config app/app-system component/start)]
       (tests)
-      (component/stop *system*))))
+      (component/stop *system*)
+      (io/delete-file (:db-path config)))))
 
-(defn clear-db! [db]
-  (doseq [n (.getAllNames db)
-          :let [hm (sr/open-hashmap db n)]]
-    (run! (partial sr/remove! hm) (keys hm))))
+(defn wrap-browser [tests]
+  (sd/with-browser [browser (sd/make-browser)]
+    (binding [*browser* browser]
+      (tests))))
 
-(defn dump-db []
-  (let [db (get-in *system* [:spicerack :db])]
-    (into {} (map (juxt identity (partial sr/open-hashmap db)) (.getAllNames db)))))
+(defn wrap-clear-cookies [test]
+  (.deleteAllCookies (.manage *browser*))
+  (test))
 
-(defn load-db! [data]
-  (let [db (get-in *system* [:spicerack :db])]
-    (doseq [[name values] data
-            :let [hmap (sr/open-hashmap db name)]]
-      (doseq [[k v] values]
-        (sr/put! hmap k v)))))
+(defn app-url [path]
+  (str "http://localhost:" test-http-port path))
 
-(defn wrap-clear-db [tests]
+(defn current-path []
+  (:path (uri/uri (sd/current-url *browser*))))
+
+(defn dump-db
+  "Return all data in the database as one big hash-map."
+  []
+  (sc/dump-db (get-in *system* [:spicerack :db])))
+
+(defn load-db!
+  "Populate the database with data, as returned by `load-db!`"
+  [data]
+  (sc/load-db! (get-in *system* [:spicerack :db]) data))
+
+(defn clear-db!
+  "Delete all data in the database, making it empty again."
+  [db]
+  (sc/clear-db! db))
+
+(defn wrap-clear-db
+  "Test fixture which clears the database before each test."
+  [test]
   (clear-db! (get-in *system* [:spicerack :db]))
-  (tests))
+  (test))
 
-(defn find-by-class*
-  ([arg] (sd/find-by-class* *browser* arg))
-  ([browser-or-elem arg] (sd/find-by-class* browser-or-elem arg)))
-(defn find-by-css
-  ([arg] (sd/find-by-css *browser* arg))
-  ([browser-or-elem arg] (sd/find-by-css browser-or-elem arg)))
-(defn find-by-css*
-  ([arg] (sd/find-by-css* *browser* arg))
-  ([browser-or-elem arg] (sd/find-by-css* browser-or-elem arg)))
-(defn find-by-class
-  ([arg] (sd/find-by-class *browser* arg))
-  ([browser-or-elem arg] (sd/find-by-class browser-or-elem arg)))
-(defn find-by-id
-  ([arg] (sd/find-by-id *browser* arg))
-  ([browser-or-elem arg] (sd/find-by-id browser-or-elem arg)))
-(defn find-by-xpath*
-  ([arg] (sd/find-by-xpath* *browser* arg))
-  ([browser-or-elem arg] (sd/find-by-xpath* browser-or-elem arg)))
-(defn find-by-tag
-  ([arg] (sd/find-by-tag *browser* arg))
-  ([browser-or-elem arg] (sd/find-by-tag browser-or-elem arg)))
-(defn find-by-xpath
-  ([arg] (sd/find-by-xpath *browser* arg))
-  ([browser-or-elem arg] (sd/find-by-xpath browser-or-elem arg)))
-(defn find-by-tag*
-  ([arg] (sd/find-by-tag* *browser* arg))
-  ([browser-or-elem arg] (sd/find-by-tag* browser-or-elem arg)))
+;; (defn find-by-class*
+;;   ([arg] (sd/find-by-class* *browser* arg))
+;;   ([browser-or-elem arg] (sd/find-by-class* browser-or-elem arg)))
+;; (defn find-by-css
+;;   ([arg] (sd/find-by-css *browser* arg))
+;;   ([browser-or-elem arg] (sd/find-by-css browser-or-elem arg)))
+;; (defn find-by-css*
+;;   ([arg] (sd/find-by-css* *browser* arg))
+;;   ([browser-or-elem arg] (sd/find-by-css* browser-or-elem arg)))
+;; (defn find-by-class
+;;   ([arg] (sd/find-by-class *browser* arg))
+;;   ([browser-or-elem arg] (sd/find-by-class browser-or-elem arg)))
+;; (defn find-by-id
+;;   ([arg] (sd/find-by-id *browser* arg))
+;;   ([browser-or-elem arg] (sd/find-by-id browser-or-elem arg)))
+;; (defn find-by-xpath*
+;;   ([arg] (sd/find-by-xpath* *browser* arg))
+;;   ([browser-or-elem arg] (sd/find-by-xpath* browser-or-elem arg)))
+;; (defn find-by-tag
+;;   ([arg] (sd/find-by-tag *browser* arg))
+;;   ([browser-or-elem arg] (sd/find-by-tag browser-or-elem arg)))
+;; (defn find-by-xpath
+;;   ([arg] (sd/find-by-xpath *browser* arg))
+;;   ([browser-or-elem arg] (sd/find-by-xpath browser-or-elem arg)))
+;; (defn find-by-tag*
+;;   ([arg] (sd/find-by-tag* *browser* arg))
+;;   ([browser-or-elem arg] (sd/find-by-tag* browser-or-elem arg)))
 
 (defn page-source [& args] (apply sd/page-source *browser* args))
 (defn current-url [& args] (apply sd/current-url *browser* args))
@@ -103,9 +118,6 @@
 (defn browser-cookies->map [& args] (apply sd/browser-cookies->map *browser* args))
 (defn cache-dir [& args] (apply sd/cache-dir *browser* args))
 
-(defn current-path []
-  (:path (uri/uri (current-url))))
-
 (defn page-text []
   (sd/text (find-by-css "html")))
 
@@ -125,3 +137,33 @@
 (doseq [[n v] (ns-publics *ns*)]
   (if-let [orig (resolve (symbol (str "sd/" n)))]
     (alter-meta! v (partial merge (meta orig)))))
+
+(defn find-with-timeout [{:keys [finder browser selector timeout-millis] :or {timeout-millis 5000}}]
+  (let [start-time (System/currentTimeMillis)
+        timeout?   #(> (- (System/currentTimeMillis) start-time) timeout-millis)]
+    (loop []
+      (let [element (try
+                      (finder browser selector)
+                      (catch NoSuchElementException e
+                        (if (timeout?)
+                          (let [expected (list (-> finder meta :name) selector)
+                                actual   (list 'not expected)
+                                message  (str "No such element: " selector)]
+                            (test/report {:type :error :message message :expected expected :actual actual})
+                            :timeout)
+                          :not-found)))]
+        (if (= element :not-found)
+          (recur)
+          element)))))
+
+(defn find-by-css [selector]
+  (find-with-timeout {:finder #'sd/find-by-css :browser *browser* :selector selector}))
+
+(defn find-by-css* [selector]
+  (find-with-timeout {:finder #'sd/find-by-css* :browser *browser* :selector selector}))
+
+(defn find-by-xpath [selector]
+  (find-with-timeout {:finder #'sd/find-by-xpath :browser *browser* :selector selector}))
+
+(defn find-by-xpath* [selector]
+  (find-with-timeout {:finder #'sd/find-by-xpath :browser *browser* :selector selector}))
