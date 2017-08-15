@@ -1,9 +1,9 @@
 (ns booklog.application
   (:gen-class)
-  (:require [booklog.components.spicerack :refer [new-spicerack]]
+  (:require [com.stuartsierra.component :as component]
+            [booklog.components.spicerack :refer [new-spicerack]]
             [booklog.middleware.render :refer [wrap-render-views]]
             [booklog.routes :refer [app-routes]]
-            [com.stuartsierra.component :as component]
             [environ.core :refer [env]]
             [prone.middleware :as prone]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
