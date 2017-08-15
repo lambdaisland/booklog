@@ -17,9 +17,13 @@
             [buddy.auth.middleware :refer [wrap-authentication]]
             [buddy.auth.backends :as backends]))
 
-(defn app-system []
+(defn app-config []
+  {:http-port 1234
+   :db-path "./booklog.db"})
+
+(defn app-system [config]
   (component/system-map
-   :spicerack (new-spicerack "./booklog.db")
+   :spicerack (new-spicerack (:db-path config))
    :routes (-> (new-endpoint #(fn [req] ((app-routes %) req)))
                (component/using [:spicerack]))
    :middleware (new-middleware  {:middleware [wrap-render-views
@@ -32,8 +36,8 @@
              (new-handler)
              [:routes :middleware])
    :http (component/using
-          (new-web-server (Integer. (or (env :port) 1234)))
+          (new-web-server (Integer. (or (env :port) (:http-port config))))
           [:handler])))
 
 (defn -main [& _]
-  (component/start (app-system)))
+  (component/start (app-system (app-config))))
