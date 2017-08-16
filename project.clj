@@ -30,7 +30,7 @@
                  ;;[buddy/buddy-sign "1.4.0"]
                  ;;[buddy/buddy-core "1.2.0"]
 
-                 [sparkledriver "0.1.9"]
+                 [sparkledriver "0.1.10"]
                  [lambdaisland/uri "1.1.0"]]
 
   :plugins [[lein-cljsbuild "1.1.7"]
