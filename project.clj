@@ -5,23 +5,23 @@
   :license {:name "Mozilla Public License 2.0"
             :url "https://www.mozilla.org/en-US/MPL/2.0/"}
 
-  :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
-                 [org.clojure/clojurescript "1.9.854" :scope "provided"]
+  :dependencies [[org.clojure/clojure "1.10.1"]
+                 [org.clojure/clojurescript "1.10.520" :scope "provided"]
                  [com.google.guava/guava "23.0"]
-                 [com.cognitect/transit-clj "0.8.300"]
-                 [ring "1.6.2"]
-                 [ring/ring-defaults "0.3.1"]
+                 [com.cognitect/transit-clj "0.8.313"]
+                 [ring "1.7.1"]
+                 [ring/ring-defaults "0.3.2"]
                  [bk/ring-gzip "0.2.1"]
                  [lambdaisland/ring.middleware.logger "0.5.1"]
                  [compojure "1.6.0"]
                  [environ "1.1.0"]
-                 [com.stuartsierra/component "0.3.2"]
+                 [com.stuartsierra/component "0.4.0"]
                  [org.danielsz/system "0.4.0"]
                  [org.clojure/tools.namespace "0.2.11"]
                  [reagent "0.7.0"]
-                 [lambdaisland/garden-watcher "0.3.2"]
+                 [lambdaisland/garden-watcher "0.3.3"]
                  [hiccup "2.0.0-alpha1"]
-                 [spicerack "0.1.3"]
+                 [spicerack "0.1.6"]
                  [prone "1.1.4"]
                  [com.rpl/specter "1.0.3"]
 
@@ -114,18 +114,18 @@
   :doo {:build "test"}
 
   :profiles {:dev
-             {:dependencies [[figwheel "0.5.12"]
-                             [figwheel-sidecar "0.5.12"]
-                             [com.cemerick/piggieback "0.2.2"]
-                             [org.clojure/tools.nrepl "0.2.13"]
-                             [lein-doo "0.1.7"]
-                             [reloaded.repl "0.2.3"]]
+             {:dependencies [[figwheel "0.5.19"]
+                             [figwheel-sidecar "0.5.19"]
+                             [cider/piggieback "0.4.1"]
+                             [nrepl "0.7.0-alpha1"]
+                             [lein-doo "0.1.11"]
+                             [reloaded.repl "0.2.4"]]
 
               :plugins [[lein-figwheel "0.5.12"]
                         [lein-doo "0.1.7"]]
 
               :source-paths ["dev"]
-              :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}
+              :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}
 
              :uberjar
              {:source-paths ^:replace ["src/clj" "src/cljc"]

@@ -5,7 +5,11 @@ Demo application which featured in Lambda Island episodes
 * [28. Buddy Authentication](https://lambdaisland.com/episodes/buddy-authentication)
 * [34. Acceptance Testing with SparkleDriver](https://lambdaisland.com/episodes/acceptance-testing-sparkledriver)
 
-This app lets you keep a log of the books you read. It's web stack consists of Ring/Compojure/Hiccup, with Buddy for authentication, [Spicerack](https://github.com/jackrusher/spicerack] for persistence, and [SparkleDriver](https://github.com/jackrusher/sparkledriver) for integration testing.
+This app lets you keep a log of the books you read. It's web stack consists of
+Ring/Compojure/Hiccup, with Buddy for authentication,
+[Spicerack](https://github.com/jackrusher/spicerack] for persistence, and
+[SparkleDriver](https://github.com/jackrusher/sparkledriver) for integration
+testing.
 
 ## Development
 
@@ -18,7 +22,10 @@ In the REPL, type
 (go)
 ```
 
-This start the app system, including database and web server. Although this is not a rich client app, it still uses Figwheel to provide hot reloading of CSS (written using Garden).
+This start the app system, including database and web server, available at
+[http://localhost:1234](http://localhost:1234). Although this is not a rich
+client app (it doesn't use ClojureScript), it still uses Figwheel to provide hot
+reloading of CSS (written using Garden).
 
 ## Testing
 
