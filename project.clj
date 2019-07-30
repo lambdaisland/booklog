@@ -21,7 +21,7 @@
                  [reagent "0.7.0"]
                  [lambdaisland/garden-watcher "0.3.3"]
                  [hiccup "2.0.0-alpha1"]
-                 [spicerack "0.1.6"]
+                 [spicerack "0.1.3"]
                  [prone "1.1.4"]
                  [com.rpl/specter "1.0.3"]
 
