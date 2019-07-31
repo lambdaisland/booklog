@@ -30,6 +30,9 @@
                  ;;[buddy/buddy-sign "1.4.0"]
                  ;;[buddy/buddy-core "1.2.0"]
 
+                 [ring-oauth2 "0.1.4"]
+                 [cheshire "5.8.1"]
+
                  [sparkledriver "0.1.10"]
                  [lambdaisland/uri "1.1.0"]]
 

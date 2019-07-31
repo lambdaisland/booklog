@@ -3,11 +3,12 @@
             [booklog.books.routes :refer [books-routes]]
             [booklog.timeline.routes :refer [timeline-routes]]
             [compojure.core :refer [routes]]
-            [compojure.route :refer [resources]]))
+            [compojure.route :refer [not-found resources]]))
 
 (defn app-routes [endpoint]
   (routes
    (timeline-routes endpoint)
    (books-routes endpoint)
    (auth-routes endpoint)
-   (resources "/")))
+   (resources "/")
+   (not-found "URL not found")))

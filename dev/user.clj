@@ -32,7 +32,9 @@
 
 (ctnr/set-refresh-dirs "src" "dev")
 
-(reloaded/set-init! #(dev-system (dev-config)))
+(reloaded/set-init! #(do
+                       (println (str "Visit the website at http://localhost:" (:http-port (app/app-config)) ))
+                       (dev-system (dev-config))))
 
 (defn browser-repl []
   (fw-sys/cljs-repl (:figwheel-system reloaded/system)))

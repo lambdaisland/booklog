@@ -21,17 +21,28 @@
   {:http-port 1234
    :db-path "./booklog.db"})
 
+#_(defn oauth-config []
+  {:google
+   {:authorize-uri    "https://accounts.google.com/o/oauth2/v2/auth"
+    :access-token-uri "https://www.googleapis.com/oauth2/v4/token"
+    :client-id        <CLIENT-ID>
+    :client-secret    <CLIENT-SECRET>
+    :scopes           ["email"]
+    :launch-uri       "/oauth2/google"
+    :redirect-uri     "/oauth2/google/callback"
+    :landing-uri      "/oauth2/google/success"}})
+
 (defn app-system [config]
   (component/system-map
    :spicerack (new-spicerack (:db-path config))
    :routes (-> (new-endpoint #(fn [req] ((app-routes %) req)))
                (component/using [:spicerack]))
-   :middleware (new-middleware  {:middleware [wrap-render-views
-                                              [wrap-authentication (backends/session)]
-                                              [wrap-defaults site-defaults]
-                                              wrap-with-logger
-                                              wrap-gzip
-                                              prone/wrap-exceptions]})
+   :middleware (new-middleware {:middleware [wrap-render-views
+                                             [wrap-authentication (backends/session)]
+                                             [wrap-defaults site-defaults]
+                                             wrap-with-logger
+                                             wrap-gzip
+                                             prone/wrap-exceptions]})
    :handler (component/using
              (new-handler)
              [:routes :middleware])

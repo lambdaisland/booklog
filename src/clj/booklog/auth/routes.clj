@@ -7,6 +7,7 @@
             [spicerack.core :as sr]
             [clojure.string :as str]))
 
+
 (defn auth-routes [{:keys [spicerack] :as endpoint}]
   (let [users (sr/open-hashmap (:db spicerack) "users")]
     (routes
@@ -30,6 +31,14 @@
      (GET "/register" _
        (render :view register-view
                :data {:layout/title "Register"}))
+
+     #_(GET "/oauth2/google")          ;; implemented by ring-oauth2
+     #_(GET "/oauth2/google/callback") ;; implemented by ring-oauth2
+
+     (GET "/oauth2/google/success" req
+       {:status  200
+        :headers {"Content-Type" "text/plain"}
+        :body    (with-out-str (clojure.pprint/pprint req))})
 
      (POST "/register" [username password]
        (if (get users username)

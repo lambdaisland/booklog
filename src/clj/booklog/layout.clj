@@ -19,7 +19,10 @@
       (menu-item (str "/users/" identity "/books") "My books"))
     (if authenticated?
       (menu-item "/logout" "Log out")
-      (menu-item "/login" "Log in"))]))
+      [:div
+       (menu-item "/login" "Log in")
+       (menu-item "/oauth2/google" "Log in with Google")
+       ])]))
 
 (defn layout [{:layout/keys [message title authenticated?] :as data} content]
   (html
