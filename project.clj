@@ -8,7 +8,7 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.520" :scope "provided"]
                  [com.google.guava/guava "23.0"]
-                 [com.cognitect/transit-clj "0.8.313"]
+                 [com.cognitect/transit-clj "0.8.313" :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [ring "1.7.1"]
                  [ring/ring-defaults "0.3.2"]
                  [bk/ring-gzip "0.2.1"]
@@ -25,16 +25,16 @@
                  [prone "1.1.4"]
                  [com.rpl/specter "1.0.3"]
 
+                 ;; episode 28
                  [buddy/buddy-auth "1.4.1"]
                  [buddy/buddy-hashers "1.2.0"]
-                 ;;[buddy/buddy-sign "1.4.0"]
-                 ;;[buddy/buddy-core "1.2.0"]
 
-                 [ring-oauth2 "0.1.4"]
-                 [cheshire "5.8.1"]
-
+                 ;; episode 34
                  [sparkledriver "0.1.10"]
-                 [lambdaisland/uri "1.1.0"]]
+                 [lambdaisland/uri "1.1.0"]
+
+                 ;; episode 49
+                 [ring-oauth2 "0.1.4"]]
 
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-environ "1.1.0"]]
