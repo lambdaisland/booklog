@@ -10,6 +10,7 @@
             [ring.middleware.gzip :refer [wrap-gzip]]
             [ring.middleware.logger :refer [wrap-with-logger]]
             [ring.util.response :refer [redirect]]
+            [ring.middleware.oauth2 :refer [wrap-oauth2]]
             [system.components.endpoint :refer [new-endpoint]]
             [system.components.handler :refer [new-handler]]
             [system.components.jetty :refer [new-web-server]]
@@ -21,16 +22,15 @@
   {:http-port 1234
    :db-path "./booklog.db"})
 
-#_
 (defn oauth-config []
   {:google
    {:authorize-uri    "https://accounts.google.com/o/oauth2/v2/auth"
     :access-token-uri "https://www.googleapis.com/oauth2/v4/token"
-    :client-id        "CLIENT-ID"
-    :client-secret    "CLIENT-SECRET"
-    :scopes           ["..."]
-    :launch-uri       "..."
-    :redirect-uri     "..."
+    :client-id        "712138220412-bj7ndil8hejeva95nmnhpa9qu734edvi.apps.googleusercontent.com"
+    :client-secret    "bDaCpi-7hE5AMg2Lea_OQraT"
+    :scopes           ["email"]
+    :launch-uri       "/log-in-with-google"
+    :redirect-uri     "/oauth/google/callback"
     :landing-uri      "..."}})
 
 (defn app-system [config]
@@ -40,7 +40,10 @@
                (component/using [:spicerack]))
    :middleware (new-middleware {:middleware [wrap-render-views
                                              [wrap-authentication (backends/session)]
-                                             [wrap-defaults site-defaults]
+                                             [wrap-oauth2 (oauth-config)]
+                                             [wrap-defaults (-> site-defaults
+                                                                (assoc-in [:session :cookie-attrs :same-site]
+                                                                          :lax))]
                                              wrap-with-logger
                                              wrap-gzip
                                              prone/wrap-exceptions]})
