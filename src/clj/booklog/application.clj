@@ -21,16 +21,17 @@
   {:http-port 1234
    :db-path "./booklog.db"})
 
-#_(defn oauth-config []
-    {:google
-     {:authorize-uri    "https://accounts.google.com/o/oauth2/v2/auth"
-      :access-token-uri "https://www.googleapis.com/oauth2/v4/token"
-      :client-id        <CLIENT-ID>
-      :client-secret    <CLIENT-SECRET>
-      :scopes           ["..."]
-      :launch-uri       "..."
-      :redirect-uri     "..."
-      :landing-uri      "..."}})
+#_
+(defn oauth-config []
+  {:google
+   {:authorize-uri    "https://accounts.google.com/o/oauth2/v2/auth"
+    :access-token-uri "https://www.googleapis.com/oauth2/v4/token"
+    :client-id        "CLIENT-ID"
+    :client-secret    "CLIENT-SECRET"
+    :scopes           ["..."]
+    :launch-uri       "..."
+    :redirect-uri     "..."
+    :landing-uri      "..."}})
 
 (defn app-system [config]
   (component/system-map
