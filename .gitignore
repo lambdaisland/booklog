@@ -16,3 +16,4 @@ pom.xml.asc
 resources/public/css/style.css
 *.db
 pemfile_cached
+src/clj/booklog/google_json.edn

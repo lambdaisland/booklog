@@ -5,8 +5,14 @@
             [compojure.core :refer [GET POST routes]]
             [ring.util.response :refer [redirect]]
             [spicerack.core :as sr]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [clj-http.client :as http]))
 
+(def userinfo-url "https://www.googleapis.com/oauth2/v1/userinfo")
+
+(defn google-fetch-email [token]
+  (-> (http/get userinfo-url {:query-params {:access_token token} :as :json})
+      (get-in [:body :email])))
 
 (defn auth-routes [{:keys [spicerack] :as endpoint}]
   (let [users (sr/open-hashmap (:db spicerack) "users")]
@@ -42,6 +48,15 @@
            (sr/put! users username (hashers/derive password))
            (-> (redirect "/login")
                (flash-message "Thanks for registering! Please log in.")))))
+
+     (GET "/oauth/google/done" req
+       (let [token (get-in req [:oauth2/access-tokens :google :token])
+             email (google-fetch-email token)
+             next-session (-> (assoc (:session req) :identity email)
+                              (with-meta {:recreate true}))]
+         (-> (redirect "/")
+             (assoc :session next-session)
+             (flash-message (str "OAuth login successful, welcome back " email)))))
 
      (GET "/logout" _
        (-> (redirect "/")

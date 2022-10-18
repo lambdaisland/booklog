@@ -31,7 +31,7 @@
     :scopes           ["email"]
     :launch-uri       "/log-in-with-google"
     :redirect-uri     "/oauth/google/callback"
-    :landing-uri      "..."}})
+    :landing-uri      "/oauth/google/done"}})
 
 (defn app-system [config]
   (component/system-map
